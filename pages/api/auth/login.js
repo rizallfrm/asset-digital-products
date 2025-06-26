@@ -1,10 +1,12 @@
-import { User } from '../../../database/models';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { authLimiter } from "@/middleware/security";
+import { User } from "../../../database/models";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+  await runMiddleware(req, res, authLimiter);
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method not allowed" });
   }
 
   try {
@@ -12,19 +14,21 @@ export default async function handler(req, res) {
 
     // Validasi input
     if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
     // Cek user
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     // Verifikasi password
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     // Generate token
@@ -35,12 +39,28 @@ export default async function handler(req, res) {
     );
 
     return res.status(200).json({
-      message: 'Login successful',
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      message: "Login successful",
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
       token,
     });
   } catch (error) {
-    console.error('Login error:', error);
-    return res.status(500).json({ message: 'Internal server error' });
+    console.error("Login error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
+}
+
+function runMiddleware(req, res, fn) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+      return resolve(result);
+    });
+  });
 }
