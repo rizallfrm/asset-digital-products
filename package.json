@@ -9,17 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^16.5.0",
+    "express-rate-limit": "^7.5.1",
+    "formik": "^2.4.6",
     "googleapis": "^150.0.1",
     "jsonwebtoken": "^9.0.2",
-    "next": "15.3.4",
+    "lucide-react": "^0.523.0",
+    "next": "^15.3.4",
     "nodemailer": "^7.0.3",
     "pg": "^8.16.2",
     "pg-hstore": "^2.3.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "sequelize": "^6.37.7"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-toastify": "^11.0.5",
+    "sequelize": "^6.37.7",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -27,6 +34,6 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "sequelize-cli": "^6.6.3",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4.1.11"
   }
 }
