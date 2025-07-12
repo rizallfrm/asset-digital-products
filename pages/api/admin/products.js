@@ -36,6 +36,8 @@ export default authenticate(async function handler(req, res) {
     }
   }
 
+
+  // create product
   if (req.method === "POST") {
     try {
       const { name, description, price, stock, categoryId } = req.body;
